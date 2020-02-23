@@ -1,14 +1,14 @@
 
 import 'dart:convert';
 
-class Baners {
+class BanerResones {
   List<Baner> baners;
 
-  Baners({
+  BanerResones({
     this.baners,
   });
 
-  factory Baners.fromJson(Map<String, dynamic> json) => Baners(
+  factory BanerResones.fromJson(Map<String, dynamic> json) => BanerResones(
     baners: List<Baner>.from(json["baners"].map((x) => Baner.fromJson(x))),
   );
 

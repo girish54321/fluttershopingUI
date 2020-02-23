@@ -34,8 +34,9 @@ class ShopingHome extends StatefulWidget {
 class _ShopingHomeState extends State<ShopingHome> {
   int _selectedItemPosition = 2;
   bool _isLoading = true;
-  Baners baners;
-  List<Widget> banerswidget = null;
+  BanerResones banerResones;
+  List<Baner> banerList;
+  List<Widget> banerswidget = [];
 
   @override
   void initState() {
@@ -49,12 +50,13 @@ class _ShopingHomeState extends State<ShopingHome> {
     });
     var res = await Network().getData('https://api.myjson.com/bins/82haw');
     var body = json.decode(res.body);
-    print("BANERS PLZ");
+    print("BANERS PLZ========================================");
     print(res.statusCode);
 
     if (res.statusCode == 200) {
-      baners = new Baners.fromJson(body);
-      banerswidget = baners.baners
+      banerResones = new BanerResones.fromJson(body);
+      banerList = banerResones.baners;
+      banerswidget = banerResones.baners
           .asMap()
           .entries
           .map(
@@ -67,7 +69,7 @@ class _ShopingHomeState extends State<ShopingHome> {
               ),
               alignment: Alignment.center,
               child: Text(
-                baners.baners[map.key].blurhash,
+                banerResones.baners[map.key].blurhash,
                 style: TextStyle(color: Colors.white),
               ),
             ),
@@ -86,160 +88,167 @@ class _ShopingHomeState extends State<ShopingHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        children: <Widget>[
-          Stack(
-            children: <Widget>[
-              Container(
-                  height: 240.0,
-                  child: _isLoading
-                      ? Text("WAITE")
-                      : Carousel(
-                          animationCurve: Curves.ease,
-                          images: baners.baners.asMap().entries.map(
-//                                (MapEntry map) => Container(
-//                                  margin: EdgeInsets.only(left: 10),
-//                                  padding: EdgeInsets.all(5.0),
-//                                  decoration: BoxDecoration(
-//                                    color: Theme.of(context).accentColor,
-//                                    borderRadius: BorderRadius.circular(10.0),
-//                                  ),
-//                                  alignment: Alignment.center,
-//                                  child: Text(
-//                                    baners.baners[map.key].blurhash,
-//                                    style: TextStyle(color: Colors.white),
-//                                  ),
-//                                ),
-                              (MapEntry map) {
-                            return CachedNetworkImage(
-                              fadeInDuration: Duration(seconds: 1),
-                              fit: BoxFit.cover,
-                              height: 240,
-                              imageUrl: baners.baners[map.key].imageUrl,
-                              placeholder: (context, url) => Container(
-                                child: BlurHash(
-                                    hash: baners.baners[map.key].blurhash),
-                              ),
-                              errorWidget: (context, url, error) =>
-                                  Icon(Icons.error),
-                            );
-                          }).toList(),
-                          dotSize: 4.0,
-                          dotSpacing: 15.0,
-                          dotColor: Colors.orange,
-                          indicatorBgPadding: 5.0,
-                          dotBgColor: Colors.transparent,
-                          borderRadius: false,
-                        )),
-              SafeArea(
-                child: AppBar(
-                  elevation: 0,
-                  backgroundColor: Colors.transparent,
-                  actions: <Widget>[
-                    IconButton(
-                      icon: Icon(
-                        Icons.favorite,
-                        color: Colors.pink,
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.shopping_cart,
-                        color: Colors.orange,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.all(25),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    FadeAnimation(
-                      1.2,
-                      Text('Choose \na category',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              color: Color.fromRGBO(97, 90, 90, 1))),
-                    ),
-                    Container(
-                      child: Row(
-                        children: <Widget>[
-                          FadeAnimation(
-                              1.2,
-                              FlatButton(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5)),
-                                padding: EdgeInsets.all(10),
-                                onPressed: () {},
-                                color: Color.fromRGBO(251, 53, 105, 0.1),
-                                child: Text('Adult',
-                                    style: TextStyle(
-                                        color: Color.fromRGBO(251, 53, 105, 1),
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold)),
-                              )),
-                          SizedBox(
-                            width: 20.0,
-                          ),
-                          FadeAnimation(
-                              1.3,
-                              FlatButton(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5)),
-                                padding: EdgeInsets.all(10),
-                                onPressed: () {},
-                                color: Color.fromRGBO(97, 90, 90, 0.1),
-                                child: Text('Children',
-                                    style: TextStyle(
-                                        color: Color.fromRGBO(97, 90, 90, 0.6),
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold)),
-                              )),
-                        ],
-                      ),
-                    )
-                  ],
-                )
-              ],
+//      body: ListView(
+//        children: <Widget>[
+//          Stack(
+//            children: <Widget>[
+//              Container(
+//                  height: 240.0,
+//                  child: _isLoading
+//                      ? Text("WAITE")
+//                      : Carousel(
+//                          animationCurve: Curves.ease,
+//                          images:
+//                              banerResones.baners.asMap().entries.map((MapEntry map) {
+//                            return CachedNetworkImage(
+//                              fadeInDuration: Duration(seconds: 1),
+//                              fit: BoxFit.cover,
+//                              height: 240,
+//                              imageUrl: banerResones.baners[map.key].imageUrl,
+////                              placeholder: (context, url) => Container(
+////                                child: BlurHash(
+////                                    hash: baners.baners[map.key].blurhash),
+////                              ),
+//                              errorWidget: (context, url, error) =>
+//                                  Icon(Icons.error),
+//                            );
+//                          }).toList(),
+//                          dotSize: 4.0,
+//                          dotSpacing: 15.0,
+//                          dotColor: Colors.orange,
+//                          indicatorBgPadding: 5.0,
+//                          dotBgColor: Colors.transparent,
+//                          borderRadius: false,
+//                        )),
+//              SafeArea(
+//                child: AppBar(
+//                  elevation: 0,
+//                  backgroundColor: Colors.transparent,
+//                  actions: <Widget>[
+//                    IconButton(
+//                      icon: Icon(
+//                        Icons.favorite,
+//                        color: Colors.pink,
+//                      ),
+//                    ),
+//                    IconButton(
+//                      icon: Icon(
+//                        Icons.shopping_cart,
+//                        color: Colors.orange,
+//                      ),
+//                    )
+//                  ],
+//                ),
+//              ),
+//            ],
+//          ),
+//          Padding(
+//            padding: EdgeInsets.all(25),
+//            child: Column(
+//              crossAxisAlignment: CrossAxisAlignment.start,
+//              children: <Widget>[
+//
+//                Row(
+//                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                  children: <Widget>[
+//                    FadeAnimation(
+//                      1.2,
+//                      Text('Choose \na category',
+//                          style: TextStyle(
+//                              fontWeight: FontWeight.bold,
+//                              fontSize: 20,
+//                              color: Color.fromRGBO(97, 90, 90, 1))),
+//                    ),
+//                    Container(
+//                      child: Row(
+//                        children: <Widget>[
+//                          FadeAnimation(
+//                              1.2,
+//                              FlatButton(
+//                                shape: RoundedRectangleBorder(
+//                                    borderRadius: BorderRadius.circular(5)),
+//                                padding: EdgeInsets.all(10),
+//                                onPressed: () {},
+//                                color: Color.fromRGBO(251, 53, 105, 0.1),
+//                                child: Text('Adult',
+//                                    style: TextStyle(
+//                                        color: Color.fromRGBO(251, 53, 105, 1),
+//                                        fontSize: 16,
+//                                        fontWeight: FontWeight.bold)),
+//                              )),
+//                          SizedBox(
+//                            width: 20.0,
+//                          ),
+//                          FadeAnimation(
+//                              1.3,
+//                              FlatButton(
+//                                shape: RoundedRectangleBorder(
+//                                    borderRadius: BorderRadius.circular(5)),
+//                                padding: EdgeInsets.all(10),
+//                                onPressed: () {},
+//                                color: Color.fromRGBO(97, 90, 90, 0.1),
+//                                child: Text('Children',
+//                                    style: TextStyle(
+//                                        color: Color.fromRGBO(97, 90, 90, 0.6),
+//                                        fontSize: 16,
+//                                        fontWeight: FontWeight.bold)),
+//                              )),
+//                        ],
+//                      ),
+//                    )
+//                  ],
+//                )
+//              ],
+//            ),
+//          ),
+//          SizedBox(
+//            height: 30.0,
+//          ),
+//          Container(
+//            height: 280,
+//            width: double.infinity,
+//            child: ListView(
+//              padding: EdgeInsets.only(bottom: 20, left: 20),
+//              scrollDirection: Axis.horizontal,
+//              children: <Widget>[
+//                FadeAnimation(
+//                    1.3,
+//                    makeCard(
+//                        context: context,
+//                        startColor: Color.fromRGBO(251, 121, 155, 1),
+//                        endColor: Color.fromRGBO(251, 53, 105, 1),
+//                        image: 'assets/socks-one.png')),
+//                FadeAnimation(
+//                    1.4,
+//                    makeCard(
+//                        context: context,
+//                        startColor: Color.fromRGBO(203, 251, 255, 1),
+//                        endColor: Color.fromRGBO(81, 223, 234, 1),
+//                        image: 'assets/socks-two.png')),
+//              ],
+//            ),
+//          )
+//        ],
+//      ),
+      body: _isLoading
+          ? Text("")
+          : ListView.builder(
+              itemCount: banerList.length,
+              itemBuilder: (context, index) {
+                Baner banner = banerList[index];
+                return  CachedNetworkImage(
+                  fadeInDuration: Duration(seconds: 1),
+                  fit: BoxFit.cover,
+                  height: 100,
+                  imageUrl: banner.imageUrl,
+                  placeholder: (context, url) => Container(
+                    height: 100,
+                    child: BlurHash(hash: banner.blurhash),
+                  ),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                );
+              },
             ),
-          ),
-          SizedBox(
-            height: 30.0,
-          ),
-          Container(
-            height: 280,
-            width: double.infinity,
-            child: ListView(
-              padding: EdgeInsets.only(bottom: 20, left: 20),
-              scrollDirection: Axis.horizontal,
-              children: <Widget>[
-                FadeAnimation(
-                    1.3,
-                    makeCard(
-                        context: context,
-                        startColor: Color.fromRGBO(251, 121, 155, 1),
-                        endColor: Color.fromRGBO(251, 53, 105, 1),
-                        image: 'assets/socks-one.png')),
-                FadeAnimation(
-                    1.4,
-                    makeCard(
-                        context: context,
-                        startColor: Color.fromRGBO(203, 251, 255, 1),
-                        endColor: Color.fromRGBO(81, 223, 234, 1),
-                        image: 'assets/socks-two.png')),
-              ],
-            ),
-          )
-        ],
-      ),
       bottomNavigationBar: SnakeNavigationBar(
         snakeColor: Colors.red,
         style: SnakeBarStyle.pinned,
