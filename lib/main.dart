@@ -8,6 +8,7 @@ import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'package:page_transition/page_transition.dart';
 
 import 'Animations/FadeAnimation.dart';
+import 'banerView.dart';
 import 'modal/Baners.dart';
 import 'network_utils/api.dart';
 
@@ -56,25 +57,15 @@ class _ShopingHomeState extends State<ShopingHome> {
     if (res.statusCode == 200) {
       banerResones = new BanerResones.fromJson(body);
       banerList = banerResones.baners;
-      banerswidget = banerResones.baners
-          .asMap()
-          .entries
-          .map(
-            (MapEntry map) => Container(
-              margin: EdgeInsets.only(left: 10),
-              padding: EdgeInsets.all(5.0),
-              decoration: BoxDecoration(
-                color: Theme.of(context).accentColor,
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                banerResones.baners[map.key].blurhash,
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          )
-          .toList();
+      banerswidget = banerResones.baners.asMap().entries.map((MapEntry map) {
+        return CachedNetworkImage(
+          fadeInDuration: Duration(seconds: 1),
+          fit: BoxFit.cover,
+          height: 240,
+          imageUrl: banerResones.baners[map.key].imageUrl,
+          errorWidget: (context, url, error) => Icon(Icons.error),
+        );
+      }).toList();
       setState(() {
         _isLoading = false;
       });
@@ -88,167 +79,68 @@ class _ShopingHomeState extends State<ShopingHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-//      body: ListView(
-//        children: <Widget>[
-//          Stack(
-//            children: <Widget>[
-//              Container(
-//                  height: 240.0,
-//                  child: _isLoading
-//                      ? Text("WAITE")
-//                      : Carousel(
-//                          animationCurve: Curves.ease,
-//                          images:
-//                              banerResones.baners.asMap().entries.map((MapEntry map) {
-//                            return CachedNetworkImage(
-//                              fadeInDuration: Duration(seconds: 1),
-//                              fit: BoxFit.cover,
-//                              height: 240,
-//                              imageUrl: banerResones.baners[map.key].imageUrl,
-////                              placeholder: (context, url) => Container(
-////                                child: BlurHash(
-////                                    hash: baners.baners[map.key].blurhash),
-////                              ),
-//                              errorWidget: (context, url, error) =>
-//                                  Icon(Icons.error),
-//                            );
-//                          }).toList(),
-//                          dotSize: 4.0,
-//                          dotSpacing: 15.0,
-//                          dotColor: Colors.orange,
-//                          indicatorBgPadding: 5.0,
-//                          dotBgColor: Colors.transparent,
-//                          borderRadius: false,
-//                        )),
-//              SafeArea(
-//                child: AppBar(
-//                  elevation: 0,
-//                  backgroundColor: Colors.transparent,
-//                  actions: <Widget>[
-//                    IconButton(
-//                      icon: Icon(
-//                        Icons.favorite,
-//                        color: Colors.pink,
-//                      ),
-//                    ),
-//                    IconButton(
-//                      icon: Icon(
-//                        Icons.shopping_cart,
-//                        color: Colors.orange,
-//                      ),
-//                    )
-//                  ],
-//                ),
-//              ),
-//            ],
-//          ),
-//          Padding(
-//            padding: EdgeInsets.all(25),
-//            child: Column(
-//              crossAxisAlignment: CrossAxisAlignment.start,
-//              children: <Widget>[
-//
-//                Row(
-//                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                  children: <Widget>[
-//                    FadeAnimation(
-//                      1.2,
-//                      Text('Choose \na category',
-//                          style: TextStyle(
-//                              fontWeight: FontWeight.bold,
-//                              fontSize: 20,
-//                              color: Color.fromRGBO(97, 90, 90, 1))),
-//                    ),
-//                    Container(
-//                      child: Row(
-//                        children: <Widget>[
-//                          FadeAnimation(
-//                              1.2,
-//                              FlatButton(
-//                                shape: RoundedRectangleBorder(
-//                                    borderRadius: BorderRadius.circular(5)),
-//                                padding: EdgeInsets.all(10),
-//                                onPressed: () {},
-//                                color: Color.fromRGBO(251, 53, 105, 0.1),
-//                                child: Text('Adult',
-//                                    style: TextStyle(
-//                                        color: Color.fromRGBO(251, 53, 105, 1),
-//                                        fontSize: 16,
-//                                        fontWeight: FontWeight.bold)),
-//                              )),
-//                          SizedBox(
-//                            width: 20.0,
-//                          ),
-//                          FadeAnimation(
-//                              1.3,
-//                              FlatButton(
-//                                shape: RoundedRectangleBorder(
-//                                    borderRadius: BorderRadius.circular(5)),
-//                                padding: EdgeInsets.all(10),
-//                                onPressed: () {},
-//                                color: Color.fromRGBO(97, 90, 90, 0.1),
-//                                child: Text('Children',
-//                                    style: TextStyle(
-//                                        color: Color.fromRGBO(97, 90, 90, 0.6),
-//                                        fontSize: 16,
-//                                        fontWeight: FontWeight.bold)),
-//                              )),
-//                        ],
-//                      ),
-//                    )
-//                  ],
-//                )
-//              ],
-//            ),
-//          ),
-//          SizedBox(
-//            height: 30.0,
-//          ),
-//          Container(
-//            height: 280,
-//            width: double.infinity,
-//            child: ListView(
-//              padding: EdgeInsets.only(bottom: 20, left: 20),
-//              scrollDirection: Axis.horizontal,
-//              children: <Widget>[
-//                FadeAnimation(
-//                    1.3,
-//                    makeCard(
-//                        context: context,
-//                        startColor: Color.fromRGBO(251, 121, 155, 1),
-//                        endColor: Color.fromRGBO(251, 53, 105, 1),
-//                        image: 'assets/socks-one.png')),
-//                FadeAnimation(
-//                    1.4,
-//                    makeCard(
-//                        context: context,
-//                        startColor: Color.fromRGBO(203, 251, 255, 1),
-//                        endColor: Color.fromRGBO(81, 223, 234, 1),
-//                        image: 'assets/socks-two.png')),
-//              ],
-//            ),
-//          )
-//        ],
-//      ),
-      body: _isLoading
-          ? Text("")
-          : ListView.builder(
-              itemCount: banerList.length,
-              itemBuilder: (context, index) {
-                Baner banner = banerList[index];
-                return  CachedNetworkImage(
-                  fadeInDuration: Duration(seconds: 1),
-                  fit: BoxFit.cover,
-                  height: 100,
-                  imageUrl: banner.imageUrl,
-                  placeholder: (context, url) => Container(
-                    height: 100,
-                    child: BlurHash(hash: banner.blurhash),
-                  ),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                );
-              },
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverToBoxAdapter(
+            child: Stack(
+              children: <Widget>[
+                _isLoading
+                    ? Text("")
+                    : FadeAnimation(
+                        1,
+                        HomeBaners(
+                          banerswidget: banerswidget,
+                        ),
+                      ),
+                MyAppbar(),
+              ],
             ),
+          ),
+          SliverFixedExtentList(
+            itemExtent: 80.0, // I'm forcing item heights
+            delegate: SliverChildBuilderDelegate((context, index) {
+              Baner banner = banerList[index];
+              return FadeAnimation(
+                0.3,
+                Card(
+                  margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        backgroundImage: NetworkImage(banner.imageUrl)),
+                    title: Text(
+                      banner.blurhash,
+                      style: TextStyle(color: Theme.of(context).accentColor),
+                    ),
+                    subtitle: Text(
+                      banner.blurhash,
+                    ),
+                  ),
+                ),
+              );
+            }, childCount: banerList.length),
+          ),
+        ],
+      ),
+//      body: _isLoading
+//          ? Text("")
+//          : ListView.builder(
+//              itemCount: banerList.length,
+//              itemBuilder: (context, index) {
+//                Baner banner = banerList[index];
+//                return  CachedNetworkImage(
+//                  fadeInDuration: Duration(seconds: 1),
+//                  fit: BoxFit.cover,
+//                  height: 100,
+//                  imageUrl: banner.imageUrl,
+//                  placeholder: (context, url) => Container(
+//                    height: 100,
+//                    child: BlurHash(hash: banner.blurhash),
+//                  ),
+//                  errorWidget: (context, url, error) => Icon(Icons.error),
+//                );
+//              },
+//            ),
       bottomNavigationBar: SnakeNavigationBar(
         snakeColor: Colors.red,
         style: SnakeBarStyle.pinned,
